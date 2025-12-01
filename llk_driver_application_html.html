@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLK Transportation Driver Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 10px;
+      margin: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    h1, h2, h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .section {
+      margin-top: 25px;
+    }
+
+    .submit-btn {
+      background: #0077cc;
+      color: white;
+      padding: 15px;
+      margin-top: 25px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      .container {
+        padding: 15px;
+      }
+      input, textarea, select {
+        font-size: 15px;
+      }
+      .submit-btn {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LLK Transportation LLC</h1>
+    <h2>Driver Employment Application</h2>
+
+    <form id="driverForm">
+
+      <div class="section">
+        <h3>Personal Information</h3>
+        <label>Full Name</label>
+        <input type="text" />
+
+        <label>Date of Birth</label>
+        <input type="date" />
+
+        <label>Phone Number</label>
+        <input type="text" />
+
+        <label>Email</label>
+        <input type="email" />
+
+        <label>Current Address</label>
+        <textarea></textarea>
+      </div>
+
+      <div class="section">
+        <h3>Driver’s License Information</h3>
+        <label>State Issued</label>
+        <input type="text" />
+
+        <label>License Number</label>
+        <input type="text" />
+
+        <label>License Class</label>
+        <select>
+          <option>CDL A</option>
+          <option>CDL B</option>
+          <option>CDL C</option>
+        </select>
+
+        <label>Expiration Date</label>
+        <input type="date" />
+
+        <label>Endorsements</label>
+        <textarea></textarea>
+      </div>
+
+      <div class="section">
+        <h3>Driving Experience</h3>
+        <label>Class of Equipment</label>
+        <input type="text" />
+
+        <label>Type of Equipment</label>
+        <input type="text" />
+
+        <label>Total Miles</label>
+        <input type="number" />
+      </div>
+
+      <div class="section">
+        <h3>Employment History</h3>
+        <label>Employer Name</label>
+        <input type="text" />
+
+        <label>Address</label>
+        <textarea></textarea>
+
+        <label>Supervisor</label>
+        <input type="text" />
+
+        <label>Phone</label>
+        <input type="text" />
+
+        <label>From - To</label>
+        <input type="text" placeholder="MM/YYYY - MM/YYYY" />
+
+        <label>Reason for Leaving</label>
+        <textarea></textarea>
+      </div>
+
+      <div class="section">
+        <h3>Accident History (Past 5 Years)</h3>
+        <textarea placeholder="Describe any accidents..."></textarea>
+      </div>
+
+      <div class="section">
+        <h3>Traffic Convictions (Past 3 Years)</h3>
+        <textarea placeholder="Describe any traffic convictions..."></textarea>
+      </div>
+
+      <div class="section">
+        <h3>References</h3>
+        <label>Name</label>
+        <input type="text" />
+
+        <label>Phone</label>
+        <input type="text" />
+
+        <label>Relationship</label>
+        <input type="text" />
+      </div>
+
+      <div class="section">
+        <h3>Certification & Authorization</h3>
+        <p>I certify that all information provided is accurate and authorize LLK Transportation to perform background, MVR, and employment checks.</p>
+
+        <label>Applicant Signature (Type Full Name)</label>
+        <input type="text" />
+
+        <label>Date</label>
+        <input type="date" />
+      </div>
+
+      <button class="submit-btn" type="submit">Submit Application</button>
+
+    </form>
+  </div>
+  <script>
+    // Intercept submit and send to backend
+    document.getElementById('driverForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+
+      try {
+        await fetch('/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        alert('Application submitted successfully!');
+      } catch (err) {
+        alert('There was an error submitting your application.');
+      }
+    });
+  </script>
+
+  <!-- Example Node.js Backend (server.js)
+
+  const express = require('express');
+  const bodyParser = require('body-parser');
+  const nodemailer = require('nodemailer');
+  const app = express();
+
+  app.use(bodyParser.json());
+
+  app.post('/submit', async (req, res) => {
+    const data = req.body;
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'llktransportation25@gmail.com',
+        pass: 'YOUR_APP_PASSWORD' // Use Gmail App Password
+      }
+    });
+
+    const message = {
+      from: 'LLK Application Portal',
+      to: 'llktransportation25@gmail.com',
+      subject: 'New Driver Application',
+      text: JSON.stringify(data, null, 2)
+    };
+
+    await transporter.sendMail(message);
+    res.sendStatus(200);
+  });
+
+  app.listen(3000, () => console.log('Server running on port 3000'));
+
+  -->
+</body>
+</html>
